@@ -1,3 +1,4 @@
+using App_Store.ViewModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -23,6 +24,8 @@ namespace App_Store.View
     /// </summary>
     public sealed partial class BacketView : Page
     {
+        public BasketViewModel ViewModel { get; set; }
+
         public BacketView()
         {
             this.InitializeComponent();
