@@ -28,7 +28,7 @@
         </Grid>
 
         <ScrollViewer Grid.Row="1">
-            <ListView ItemsSource="{Binding Basket}" Margin="10" Padding="0" Background="Transparent" 
+            <ListView x:Name="myListView" ItemsSource="{Binding Basket}" Margin="10" Padding="0" Background="Transparent" 
                       BorderBrush="Transparent" BorderThickness="0" SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -45,7 +45,9 @@
                                     <TextBlock Text="{Binding Count}" FontSize="14" Foreground="#293241"/>
                                 </StackPanel>
                             </StackPanel>
-                            <Button Content="Удалить из корзины" Grid.Column="1" VerticalAlignment="Center" Command="{Binding RemoveCommand}" CommandParameter="{x:Bind}">
+                            <Button Content="Удалить из корзины" Grid.Column="1" VerticalAlignment="Center" 
+            Command="{Binding DataContext.RemoveFromCartCommand, ElementName=RootGrid}" 
+            CommandParameter="{Binding}">
                             </Button>
                         </Grid>
                     </DataTemplate>

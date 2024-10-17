@@ -28,14 +28,25 @@ namespace App_Store.ViewModel
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<Product> Basket { get; }
+
+        private ObservableCollection<BasketItem> _basket;
+        public ObservableCollection<BasketItem> Basket
+        {
+            get => _basket;
+            set
+            {
+                _basket = value;
+                OnPropertyChanged(nameof(Basket));
+            }
+        }
+
         public RelayCommand AddToCartCommand { get; }
 
 
         public StoreViewModel()
         {
             Products = new ObservableCollection<Product>();
-            Basket = new ObservableCollection<Product>();
+            Basket = new ObservableCollection<BasketItem>();
             AddToCartCommand = new RelayCommand(AddToCart);
             LoadData();
         }
@@ -43,7 +54,7 @@ namespace App_Store.ViewModel
         private async void LoadData()
         {
             Products = await LoadProductsAsync();
-            var Basket = await LoadBasketsAsync();
+            Basket = await LoadBasketsAsync();
         }
 
         private async Task<ObservableCollection<Product>> LoadProductsAsync()
@@ -113,7 +124,7 @@ namespace App_Store.ViewModel
             }
         }
 
-        private async Task<ObservableCollection<Product>> LoadBasketsAsync()
+        private async Task<ObservableCollection<BasketItem>> LoadBasketsAsync()
         {
             /*var basket = new ObservableCollection<Product>();
             return basket;*/
@@ -123,22 +134,22 @@ namespace App_Store.ViewModel
                 StorageFolder folder = ApplicationData.Current.LocalFolder;
                 StorageFile file = await folder.GetFileAsync("basket.json");
                 string jsonText = await FileIO.ReadTextAsync(file);
-                return JsonConvert.DeserializeObject<ObservableCollection<Product>>(jsonText);
+                return JsonConvert.DeserializeObject<ObservableCollection<BasketItem>>(jsonText);
             }
             catch (FileNotFoundException)
             {
                 // Если файл не найден, возвращаем пустой список
-                return new ObservableCollection<Product>();
+                return new ObservableCollection<BasketItem>();
             }
         }
 
         private void AddToCart(object parameter)
         {
-            // Приведение параметра к типу Product
+            // Приведение параметра к типу
             var product = parameter as Product;
             if (product == null)
             {
-                return; // Если параметр не является Product, выходим из метода
+                return; // Если параметр не является , выходим из метода
             }
 
             // Логика добавления товара в корзину
@@ -149,11 +160,15 @@ namespace App_Store.ViewModel
             }
             else
             {
-                Basket.Add(new Product
+                double d;
+                string s = product.Price;
+                string numberPart = s.Split(' ')[0];
+                double.TryParse(numberPart, out d);
+                Basket.Add(new BasketItem
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Price = product.Price,
+                    Price = d,
                     Image = product.Image,
                     Count = 1
                 });

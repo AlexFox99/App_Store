@@ -16,15 +16,14 @@ namespace App_Store.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<BasketItem> basket;
+        private ObservableCollection<BasketItem> _basket;
         public ObservableCollection<BasketItem> Basket
         {
-            get => basket;
+            get => _basket;
             set
             {
-                basket = value;
+                _basket = value;
                 OnPropertyChanged(nameof(Basket));
-                UpdateCartSummary();
             }
         }
 
@@ -56,33 +55,33 @@ namespace App_Store.ViewModel
             }
         }
 
+        public RelayCommand RemoveFromCartCommand { get; }
+
         public BasketViewModel()
         {
             Basket = new ObservableCollection<BasketItem>();
+            RemoveFromCartCommand = new RelayCommand(RemoveFromCartAsync);
             LoadBasketAsync();
         }
 
         private async void LoadBasketAsync()
         {
-            var items = await LoadBasketFromJsonAsync();
-            foreach (var item in items)
-            {
-                Basket.Add(item);
-            }
+            Basket = await LoadBasketFromJsonAsync();
+            UpdateCartSummary();
         }
 
-        private async Task<List<BasketItem>> LoadBasketFromJsonAsync()
+        private async Task<ObservableCollection<BasketItem>> LoadBasketFromJsonAsync()
         {
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
             try
             {
-                StorageFolder folder = ApplicationData.Current.LocalFolder;
                 StorageFile file = await folder.GetFileAsync("basket.json");
                 string jsonText = await FileIO.ReadTextAsync(file);
-                return JsonConvert.DeserializeObject<List<BasketItem>>(jsonText);
+                return JsonConvert.DeserializeObject<ObservableCollection<BasketItem>>(jsonText);
             }
             catch (FileNotFoundException)
             {
-                return new List<BasketItem>();
+                return new ObservableCollection<BasketItem>();
             }
         }
 
@@ -95,13 +94,21 @@ namespace App_Store.ViewModel
             TotalPriceText = $"Общая стоимость: {totalPrice:C}";
         }
 
-        public async Task RemoveFromCartAsync(BasketItem item)
+        private void RemoveFromCartAsync(object parameter)
         {
-            if (Basket.Contains(item))
+            var basket = parameter as BasketItem;
+            if (basket == null)
             {
-                Basket.Remove(item);
-                await SaveBasketAsync();
+                return;  // Если параметр не является BasketItem, выходим из метода
             }
+
+            if (Basket.Contains(basket))
+            {
+                Basket.Remove(basket);
+                SaveBasketAsync();
+            }
+
+            return; // Return a completed task if basket is not found
         }
 
         private async Task SaveBasketAsync()
@@ -110,6 +117,7 @@ namespace App_Store.ViewModel
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             StorageFile file = await folder.CreateFileAsync("basket.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, basketJson);
+            return;
         }
 
         protected void OnPropertyChanged(string propertyName)
