@@ -7,8 +7,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        
-    </StackPanel>
+    <!-- NavigationView Основное поле -->
+    <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked" Loaded="NavView_Loaded" 
+                    SelectionChanged="NavView_SelectionChanged" MinWidth="500" Background="#3d5a80">
+        <!-- NavigationView.MenuItems Под меню два поля и поле дефолт. настройки -->
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Store" Tag="StoreView" Icon="Home" Foreground="#e0fbfc">
+            </NavigationViewItem>
+            <NavigationViewItem Content="Backet" Tag="BacketView" Icon="Shop" Foreground="#e0fbfc">
+            </NavigationViewItem>
+        </NavigationView.MenuItems>
+        <!-- Frame Под отображение страниц с информацией -->
+        <Frame x:Name="ContentFrame" NavigationFailed="ContentFrame_NavigationFailed">
+        </Frame>
+    </NavigationView>
 </Window>
