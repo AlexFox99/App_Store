@@ -75,8 +75,8 @@ namespace App_Store
                     break;
                 }
             }
-            /*Добавить View.StoreView в проект,а также View.BasketView,View.SettingsViewView*/
-            /*ContentFrame.Navigate(typeof(App_Store.View.StoreView));*/
+            /*Отображение StoreView*/
+            ContentFrame.Navigate(typeof(App_Store.View.StoreView));
         }
 
         /*Функция NavView_SelectionChanged нужна для просмотра изменения выделенного фрагмента. */
