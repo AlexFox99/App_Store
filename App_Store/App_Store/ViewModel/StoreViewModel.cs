@@ -115,9 +115,21 @@ namespace App_Store.ViewModel
 
         private async Task<ObservableCollection<Product>> LoadBasketsAsync()
         {
-            var basket = new ObservableCollection<Product>();
-            return basket;
+            /*var basket = new ObservableCollection<Product>();
+            return basket;*/
             // Логика загрузки корзины
+            try
+            {
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.GetFileAsync("basket.json");
+                string jsonText = await FileIO.ReadTextAsync(file);
+                return JsonConvert.DeserializeObject<ObservableCollection<Product>>(jsonText);
+            }
+            catch (FileNotFoundException)
+            {
+                // Если файл не найден, возвращаем пустой список
+                return new ObservableCollection<Product>();
+            }
         }
 
         private void AddToCart(object parameter)
@@ -151,6 +163,10 @@ namespace App_Store.ViewModel
 
         private async Task SaveBasketAsync()
         {
+            var basketJson = JsonConvert.SerializeObject(Basket, Formatting.Indented);
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await folder.CreateFileAsync("basket.json", CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(file, basketJson); 
             return;
             // Логика сохранения корзины
         }
