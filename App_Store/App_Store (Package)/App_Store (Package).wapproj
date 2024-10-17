@@ -49,14 +49,34 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\7 чудес.png" />
+    <Content Include="Images\Candamir_The First Settlers.png" />
+    <Content Include="Images\Chess_set_Minecraft.png" />
+    <Content Include="Images\Cluedo_Паутина лжи.png" />
     <Content Include="Images\icons8-cart-16.png" />
+    <Content Include="Images\Monopoly_The Office.png" />
+    <Content Include="Images\Risk Junior.png" />
+    <Content Include="Images\Scrabble.png" />
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.scale-200.png" />
     <Content Include="Images\Square44x44Logo.scale-200.png" />
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Images\StoreLogo.png" />
+    <Content Include="Images\Ticket_to_Ride.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
+    <Content Include="Images\Азул.png" />
+    <Content Include="Images\Бамбук.png" />
+    <Content Include="Images\Бэнг.png" />
+    <Content Include="Images\В погоне за счастьем.png" />
+    <Content Include="Images\Диксит.png" />
+    <Content Include="Images\Дюна_Война за Арракис. Космическая гильдия.png" />
+    <Content Include="Images\Игра UNO.png" />
+    <Content Include="Images\Каркассон.png" />
+    <Content Include="Images\Мистериум_Пленник времени.png" />
+    <Content Include="Images\Пандемия.png" />
+    <Content Include="Images\Сорви башню.png" />
+    <Content Include="Images\Шашки деревянные.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\App_Store\App_Store.csproj">
