@@ -1,0 +1,164 @@
+﻿using App_Store.Models;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Xml;
+using Windows.Storage;
+using Formatting = Newtonsoft.Json.Formatting;
+
+
+namespace App_Store.ViewModel
+{
+    public class StoreViewModel : INotifyPropertyChanged
+    {
+        private ObservableCollection<Product> _products;
+        public ObservableCollection<Product> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
+            }
+        }
+        public ObservableCollection<Product> Basket { get; }
+        public RelayCommand AddToCartCommand { get; }
+
+
+        public StoreViewModel()
+        {
+            Products = new ObservableCollection<Product>();
+            Basket = new ObservableCollection<Product>();
+            AddToCartCommand = new RelayCommand(AddToCart);
+            LoadData();
+        }
+
+        private async void LoadData()
+        {
+            Products = await LoadProductsAsync();
+            var Basket = await LoadBasketsAsync();
+        }
+
+        private async Task<ObservableCollection<Product>> LoadProductsAsync()
+        {
+            /*var products = new List<Product>();
+            return products;*/
+            // Логика загрузки продуктов
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            try
+            {
+                // Получаем файл products.json из локальной папки
+                StorageFile file = await folder.GetFileAsync("products.json");
+                // Читаем текст из файла
+                string jsonText = await FileIO.ReadTextAsync(file);
+                // Десериализуем JSON в список продуктов
+                return JsonConvert.DeserializeObject<ObservableCollection<Product>>(jsonText);
+            }
+            catch (FileNotFoundException)
+            {
+
+                var games = new Dictionary<int, (string name, double price, string img)>
+                {
+                    { 1, ("Ticket to Ride: Европа", 4990d,"/Images/Ticket_to_Ride.png") },
+                    { 2, ("Candamir: The First Settlers", 3990d,"/Images/Candamir_The First Settlers.png") },
+                    { 3, ("Пандемия", 3190d,"/Images/Пандемия.png") },
+                    { 4, ("Каркассон", 1990d,"/Images/Каркассон.png") },
+                    { 5, ("Scrabble", 780d,"/Images/Scrabble.png") },
+                    { 6, ("Monopoly: The Office", 5990d,"/Images/Monopoly_The Office.png") },
+                    { 7, ("Cluedo. Паутина лжи", 2690d,"/Images/Cluedo_Паутина лжи.png") },
+                    { 8, ("Risk Junior", 1690d,"/Images/Risk Junior.png") },
+                    { 9, ("В погоне за счастьем", 3690d,"/Images/В погоне за счастьем.png") },
+                    { 10, ("Chess set: Minecraft", 8790d,"/Images/Chess_set_Minecraft.png") },
+                    { 11, ("Шашки деревянные", 500d,"/Images/Шашки деревянные.png") },
+                    { 12, ("Мистериум: Пленник времени", 1750d,"/Images/Мистериум_Пленник времени.png") },
+                    { 13, ("Азул", 3990d,"/Images/Азул.png") },
+                    { 14, ("7 чудес", 3990d,"/Images/7 чудес.png") },
+                    { 15, ("Бэнг!", 1290d,"/Images/Бэнг.png") },
+                    { 16, ("Дюна: Война за Арракис. Космическая гильдия", 4990d,"/Images/Дюна_Война за Арракис. Космическая гильдия.png") },
+                    { 17, ("Сорви башню!", 690d,"/Images/Сорви башню.png") },
+                    { 18, ("Бамбук", 2990d,"/Images/Бамбук.png") },
+                    { 19, ("Игра UNO", 790d,"/Images/Игра UNO.png") },
+                    { 20, ("Диксит", 1990d,"/Images/Диксит.png") }
+                };
+                // Если файл не найден, создаем его с начальными данными
+                var initialProducts = new ObservableCollection<Product>();
+                foreach (var game in games)
+                {
+                    /*string imagePath = await ImageGenerator.GenerateProductImageAsync(game.Value.name);*/
+                    initialProducts.Add(new Product
+                    {
+                        Id = game.Key,
+                        Name = game.Value.name,
+                        Price = $"{game.Value.price:C}",
+                        Image = game.Value.img // Сохраняем путь к изображению
+                    });
+                }
+
+                // Сериализуем начальные данные в JSON
+                var jsonText = JsonConvert.SerializeObject(initialProducts, Formatting.Indented);
+
+                // Создаем файл и записываем в него данные
+                StorageFile newFile = await folder.CreateFileAsync("products.json", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(newFile, jsonText);
+
+                // Возвращаем начальные данные
+                return initialProducts;
+            }
+        }
+
+        private async Task<ObservableCollection<Product>> LoadBasketsAsync()
+        {
+            var basket = new ObservableCollection<Product>();
+            return basket;
+            // Логика загрузки корзины
+        }
+
+        private void AddToCart(object parameter)
+        {
+            // Приведение параметра к типу Product
+            var product = parameter as Product;
+            if (product == null)
+            {
+                return; // Если параметр не является Product, выходим из метода
+            }
+
+            // Логика добавления товара в корзину
+            var existingItem = Basket.FirstOrDefault(p => p.Id == product.Id);
+            if (existingItem != null)
+            {
+                existingItem.Count++;
+            }
+            else
+            {
+                Basket.Add(new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Image = product.Image,
+                    Count = 1
+                });
+            }
+            SaveBasketAsync();
+        }
+
+        private async Task SaveBasketAsync()
+        {
+            return;
+            // Логика сохранения корзины
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}
