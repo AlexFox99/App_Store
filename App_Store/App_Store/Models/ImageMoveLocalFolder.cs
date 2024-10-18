@@ -28,7 +28,8 @@ namespace App_Store.Models
                 var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{sourceFilePath}"));
                 await sourceFile.CopyAsync(folder);
             }
-                return destinationFilePath;
+            //Возращаем путь до файла в ApplicationData.Current.LocalFolder
+            return destinationFilePath;
         }
     }
 }

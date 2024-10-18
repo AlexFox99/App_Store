@@ -18,7 +18,9 @@ namespace App_Store.ViewModel
 {
     public class StoreViewModel : INotifyPropertyChanged
     {
+        
         private ObservableCollection<Product> _products;
+        /*Связка с Xaml для продуктов*/
         public ObservableCollection<Product> Products
         {
             get => _products;
@@ -30,6 +32,9 @@ namespace App_Store.ViewModel
         }
 
         private ObservableCollection<BasketItem> _basket;
+        /*Сделал по аналогии с видом продуктов на тот случай
+         если на странице с магазином потребуется информация из корзины
+         */
         public ObservableCollection<BasketItem> Basket
         {
             get => _basket;
@@ -40,42 +45,12 @@ namespace App_Store.ViewModel
             }
         }
 
+        /*Связка с кнопкой добавление в корзину*/
         public RelayCommand AddToCartCommand { get; }
 
-
-        public StoreViewModel()
-        {
-            Products = new ObservableCollection<Product>();
-            Basket = new ObservableCollection<BasketItem>();
-            AddToCartCommand = new RelayCommand(AddToCart);
-            LoadData();
-        }
-
-        private async void LoadData()
-        {
-            Products = await LoadProductsAsync();
-            Basket = await LoadBasketsAsync();
-        }
-
-        private async Task<ObservableCollection<Product>> LoadProductsAsync()
-        {
-            /*var products = new List<Product>();
-            return products;*/
-            // Логика загрузки продуктов
-            StorageFolder folder = ApplicationData.Current.LocalFolder;
-            try
-            {
-                // Получаем файл products.json из локальной папки
-                StorageFile file = await folder.GetFileAsync("products.json");
-                // Читаем текст из файла
-                string jsonText = await FileIO.ReadTextAsync(file);
-                // Десериализуем JSON в список продуктов
-                return JsonConvert.DeserializeObject<ObservableCollection<Product>>(jsonText);
-            }
-            catch (FileNotFoundException)
-            {
-
-                var games = new Dictionary<int, (string name, double price, string img)>
+        /*Список продуктов как заглушка*/
+        public Dictionary<int, (string name, double price, string img)> games { get; } =
+            new Dictionary<int, (string name, double price, string img)>
                 {
                     { 1, ("Ticket to Ride: Европа", 4990d,"Ticket_to_Ride.png") },
                     { 2, ("Candamir: The First Settlers", 3990d,"Candamir_The First Settlers.png") },
@@ -98,17 +73,49 @@ namespace App_Store.ViewModel
                     { 19, ("Игра UNO", 790d,"Игра UNO.png") },
                     { 20, ("Диксит", 1990d,"Диксит.png") }
                 };
+
+
+        public StoreViewModel()
+        {
+            Products = new ObservableCollection<Product>();
+            Basket = new ObservableCollection<BasketItem>();
+            AddToCartCommand = new RelayCommand(AddToCart);
+            LoadData();
+        }
+
+        /*Делаем начальную загрузку данных*/
+        private async void LoadData()
+        {
+            Products = await LoadProductsAsync();
+            Basket = await LoadBasketsAsync();
+        }
+
+        private async Task<ObservableCollection<Product>> LoadProductsAsync()
+        {
+            // Логика загрузки продуктов
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            try
+            {
+                // Получаем файл products.json из локальной папки
+                StorageFile file = await folder.GetFileAsync("products.json");
+                // Читаем текст из файла
+                string jsonText = await FileIO.ReadTextAsync(file);
+                // Десериализуем JSON в список продуктов
+                return JsonConvert.DeserializeObject<ObservableCollection<Product>>(jsonText);
+            }
+            catch (FileNotFoundException)
+            {
                 // Если файл не найден, создаем его с начальными данными
                 var initialProducts = new ObservableCollection<Product>();
                 foreach (var game in games)
                 {
-                    /*string imagePath = await ImageGenerator.GenerateProductImageAsync(game.Value.name);*/
                     initialProducts.Add(new Product
                     {
                         Id = game.Key,
                         Name = game.Value.name,
                         Price = $"{game.Value.price:C}",
-                        Image = await ImageMoveLocalFolder.ImageMoveLocalFolderAsync(game.Value.img) /*game.Value.img*/ // Сохраняем путь к изображению
+                        // Сохраняем путь к изображению
+                        Image = await ImageMoveLocalFolder.ImageMoveLocalFolderAsync(game.Value.img) 
                     });
                 }
 
@@ -116,7 +123,8 @@ namespace App_Store.ViewModel
                 var jsonText = JsonConvert.SerializeObject(initialProducts, Formatting.Indented);
 
                 // Создаем файл и записываем в него данные
-                StorageFile newFile = await folder.CreateFileAsync("products.json", CreationCollisionOption.ReplaceExisting);
+                StorageFile newFile = await folder.CreateFileAsync("products.json",
+                    CreationCollisionOption.ReplaceExisting);
                 await FileIO.WriteTextAsync(newFile, jsonText);
 
                 // Возвращаем начальные данные
@@ -126,8 +134,6 @@ namespace App_Store.ViewModel
 
         private async Task<ObservableCollection<BasketItem>> LoadBasketsAsync()
         {
-            /*var basket = new ObservableCollection<Product>();
-            return basket;*/
             // Логика загрузки корзины
             try
             {
@@ -145,11 +151,11 @@ namespace App_Store.ViewModel
 
         private void AddToCart(object parameter)
         {
-            // Приведение параметра к типу
+            // Приведение параметра к типу  Product
             var product = parameter as Product;
             if (product == null)
             {
-                return; // Если параметр не является , выходим из метода
+                return; // Если параметр не является Product, выходим из метода
             }
 
             // Логика добавления товара в корзину
@@ -178,12 +184,12 @@ namespace App_Store.ViewModel
 
         private async Task SaveBasketAsync()
         {
+            // Логика сохранения корзины
             var basketJson = JsonConvert.SerializeObject(Basket, Formatting.Indented);
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             StorageFile file = await folder.CreateFileAsync("basket.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, basketJson); 
             return;
-            // Логика сохранения корзины
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

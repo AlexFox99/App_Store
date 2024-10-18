@@ -16,6 +16,7 @@ namespace App_Store.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /*Связка с Xaml для корзины*/
         private ObservableCollection<BasketItem> _basket;
         public ObservableCollection<BasketItem> Basket
         {
@@ -27,6 +28,7 @@ namespace App_Store.ViewModel
             }
         }
 
+        /*Связка с Xaml для количества товаров*/
         private string productCountText;
         public string ProductCountText
         {
@@ -41,6 +43,7 @@ namespace App_Store.ViewModel
             }
         }
 
+        /*Связка с Xaml для отображения финальной цены*/
         private string totalPriceText;
         public string TotalPriceText
         {
@@ -55,6 +58,7 @@ namespace App_Store.ViewModel
             }
         }
 
+        /*Связка с Xaml для кнопки удалить*/
         public RelayCommand RemoveFromCartCommand { get; }
 
         public BasketViewModel()
@@ -64,6 +68,7 @@ namespace App_Store.ViewModel
             LoadBasketAsync();
         }
 
+        /*Загрузка начальных данных*/
         private async void LoadBasketAsync()
         {
             Basket = await LoadBasketFromJsonAsync();
