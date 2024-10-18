@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <TextBlock Text="SettingsPage" FontSize="18" Foreground="#293241"/>
+    <Grid Background="#d7d7d7">
+        <TextBlock Padding="10,10,10,10" Text="О приложении:" FontSize="18" Foreground="#293241"/>
+        <TextBlock Padding="10,40,10,10" Text="Приложение магазин" FontSize="16" Foreground="#293241"/>
     </Grid>
 </Page>

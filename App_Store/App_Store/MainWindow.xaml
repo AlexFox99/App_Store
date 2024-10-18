@@ -12,9 +12,9 @@
                     SelectionChanged="NavView_SelectionChanged" MinWidth="500" Background="#3d5a80">
         <!-- NavigationView.MenuItems Под меню два поля и поле дефолт. настройки -->
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Store" Tag="StoreView" Icon="Home" Foreground="#e0fbfc">
+            <NavigationViewItem Content="Магазин" Tag="StoreView" Icon="Home" Foreground="#e0fbfc">
             </NavigationViewItem>
-            <NavigationViewItem Content="Backet" Tag="BacketView" Icon="Shop" Foreground="#e0fbfc">
+            <NavigationViewItem Content="Корзина" Tag="BacketView" Icon="Shop" Foreground="#e0fbfc">
             </NavigationViewItem>
         </NavigationView.MenuItems>
         <!-- Frame Под отображение страниц с информацией -->

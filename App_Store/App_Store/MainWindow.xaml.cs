@@ -75,6 +75,8 @@ namespace App_Store
                     break;
                 }
             }
+            var settings = (NavigationViewItem)NavView.SettingsItem;
+            settings.Content = "О приложении";
             /*Отображение StoreView*/
             ContentFrame.Navigate(typeof(App_Store.View.StoreView));
         }
