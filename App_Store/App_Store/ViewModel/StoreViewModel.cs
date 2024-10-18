@@ -77,26 +77,26 @@ namespace App_Store.ViewModel
 
                 var games = new Dictionary<int, (string name, double price, string img)>
                 {
-                    { 1, ("Ticket to Ride: Европа", 4990d,"/Images/Ticket_to_Ride.png") },
-                    { 2, ("Candamir: The First Settlers", 3990d,"/Images/Candamir_The First Settlers.png") },
-                    { 3, ("Пандемия", 3190d,"/Images/Пандемия.png") },
-                    { 4, ("Каркассон", 1990d,"/Images/Каркассон.png") },
-                    { 5, ("Scrabble", 780d,"/Images/Scrabble.png") },
-                    { 6, ("Monopoly: The Office", 5990d,"/Images/Monopoly_The Office.png") },
-                    { 7, ("Cluedo. Паутина лжи", 2690d,"/Images/Cluedo_Паутина лжи.png") },
-                    { 8, ("Risk Junior", 1690d,"/Images/Risk Junior.png") },
-                    { 9, ("В погоне за счастьем", 3690d,"/Images/В погоне за счастьем.png") },
-                    { 10, ("Chess set: Minecraft", 8790d,"/Images/Chess_set_Minecraft.png") },
-                    { 11, ("Шашки деревянные", 500d,"/Images/Шашки деревянные.png") },
-                    { 12, ("Мистериум: Пленник времени", 1750d,"/Images/Мистериум_Пленник времени.png") },
-                    { 13, ("Азул", 3990d,"/Images/Азул.png") },
-                    { 14, ("7 чудес", 3990d,"/Images/7 чудес.png") },
-                    { 15, ("Бэнг!", 1290d,"/Images/Бэнг.png") },
-                    { 16, ("Дюна: Война за Арракис. Космическая гильдия", 4990d,"/Images/Дюна_Война за Арракис. Космическая гильдия.png") },
-                    { 17, ("Сорви башню!", 690d,"/Images/Сорви башню.png") },
-                    { 18, ("Бамбук", 2990d,"/Images/Бамбук.png") },
-                    { 19, ("Игра UNO", 790d,"/Images/Игра UNO.png") },
-                    { 20, ("Диксит", 1990d,"/Images/Диксит.png") }
+                    { 1, ("Ticket to Ride: Европа", 4990d,"Ticket_to_Ride.png") },
+                    { 2, ("Candamir: The First Settlers", 3990d,"Candamir_The First Settlers.png") },
+                    { 3, ("Пандемия", 3190d,"Пандемия.png") },
+                    { 4, ("Каркассон", 1990d,"Каркассон.png") },
+                    { 5, ("Scrabble", 780d,"Scrabble.png") },
+                    { 6, ("Monopoly: The Office", 5990d,"Monopoly_The Office.png") },
+                    { 7, ("Cluedo. Паутина лжи", 2690d,"Cluedo_Паутина лжи.png") },
+                    { 8, ("Risk Junior", 1690d,"Risk Junior.png") },
+                    { 9, ("В погоне за счастьем", 3690d,"В погоне за счастьем.png") },
+                    { 10, ("Chess set: Minecraft", 8790d,"Chess_set_Minecraft.png") },
+                    { 11, ("Шашки деревянные", 500d,"Шашки деревянные.png") },
+                    { 12, ("Мистериум: Пленник времени", 1750d,"Мистериум_Пленник времени.png") },
+                    { 13, ("Азул", 3990d,"Азул.png") },
+                    { 14, ("7 чудес", 3990d,"7 чудес.png") },
+                    { 15, ("Бэнг!", 1290d,"Бэнг.png") },
+                    { 16, ("Дюна: Война за Арракис. Космическая гильдия", 4990d,"Дюна_Война за Арракис. Космическая гильдия.png") },
+                    { 17, ("Сорви башню!", 690d,"Сорви башню.png") },
+                    { 18, ("Бамбук", 2990d,"Бамбук.png") },
+                    { 19, ("Игра UNO", 790d,"Игра UNO.png") },
+                    { 20, ("Диксит", 1990d,"Диксит.png") }
                 };
                 // Если файл не найден, создаем его с начальными данными
                 var initialProducts = new ObservableCollection<Product>();
@@ -108,7 +108,7 @@ namespace App_Store.ViewModel
                         Id = game.Key,
                         Name = game.Value.name,
                         Price = $"{game.Value.price:C}",
-                        Image = game.Value.img // Сохраняем путь к изображению
+                        Image = await ImageMoveLocalFolder.ImageMoveLocalFolderAsync(game.Value.img) /*game.Value.img*/ // Сохраняем путь к изображению
                     });
                 }
 
